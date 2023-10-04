@@ -30,56 +30,73 @@ function draw(board) {
   return true;
 }
 
+function name(mode, player) {
+  if (mode === 'HvA' && player === 'X')
+    return 'YOU (X)'
+  if (mode === 'HvA' && player === 'O')
+    return 'AI (O)'
+  if (mode === 'AvH' && player === 'X')
+    return 'AI (X)'
+  if (mode === 'AvH' && player === 'O')
+    return 'YOU (O)'
+  return player;
+}
+
 function App() {
   const [mode, setMode] = useState('HvA');
   const [history, setHistory] = useState([]);
   const [result, setResult] = useState('');
   const [board, setBoard] = useState(Array(9).fill(''));
   const [nextPlayer, setNextPlayer] = useState('X');
-  const [statusMessage, setStatusMessage] = useState('Next Player: X');
+  const [statusMessage, setStatusMessage] = useState(`Next Player: ${name('HvA', 'X')}`);
+
+  function onModeClick(value) {
+    setMode(value);
+    setHistory([]);
+    setResult('');
+    setBoard(Array(9).fill(''));
+    setNextPlayer('X');
+    setStatusMessage(`Next Player: ${name(value, 'X')}`);
+  }
 
   function onNewClick() {
     setResult('');
     setBoard(Array(9).fill(''));
     setNextPlayer('X');
-    setStatusMessage('Next Player: X');
+    setStatusMessage(`Next Player: ${name(mode, 'X')}`);
   }
 
-  function newHistory(message) {
+  function addToHistory(message) {
     const nextHistory = history.slice();
     nextHistory.push(message);
     setHistory(nextHistory);
   }
 
   function onSquareClick(i) {
-    if (board[i] === '' && result === '') {
+    if (board[i] === '' && result === '' && (
+      (mode === 'HvH') || (mode === 'HvA' && nextPlayer === 'X') || (mode === 'AvH' && nextPlayer === 'O')
+    )) {
       const nextBoard = board.slice();
       nextBoard[i] = nextPlayer;
       setBoard(nextBoard);
       if (check(nextBoard, nextPlayer)) {
         setResult(nextPlayer);
-        setStatusMessage(`${nextPlayer} wins!`);
-        newHistory(`${nextPlayer} wins!`)
+        setStatusMessage(`${name(mode, nextPlayer)} wins!`);
+        addToHistory(`${name(mode, nextPlayer)} wins!`)
       } else if (draw(nextBoard)) {
         setResult('draw');
         setStatusMessage('draw!');
-        newHistory('draw!')
+        addToHistory('draw!')
       } else {
         if (nextPlayer === 'X') {
           setNextPlayer('O');
-          setStatusMessage('Next Player: O');
+          setStatusMessage(`Next Player: ${name(mode, 'O')}`);
         } else {
           setNextPlayer('X');
-          setStatusMessage('Next Player: X');
+          setStatusMessage(`Next Player: ${name(mode, 'X')}`);
         }
       }
     }
-  }
-
-  function onModeClick(value) {
-    setMode(value);
-    setHistory([]);
-    onNewClick();
   }
 
   const divModes = (
@@ -109,43 +126,36 @@ function App() {
 
   const divBoard = (
     <div>
-      <p>
-        <button className="btn-primary m-2 w-60" onClick={() => setMode('')}>
-          &#8592; {(mode === 'HvH') ? 'Human vs Human' : (mode === 'HvA') ? 'Human vs AI' : (mode === 'AvH') ? 'AI vs Human' : (mode === 'AvA') ? 'AI vs AI' : 'INVALID MODE!'}
-        </button>
-      </p>
-      <p>
-        <table className="table-fixed">
-          <tbody>
-            <tr className="border-b-2">
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(0)}>{board[0]}</button></td>
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(1)}>{board[1]}</button></td>
-              <td                       ><button className="h-20 w-20" onClick={() => onSquareClick(2)}>{board[2]}</button></td>
-            </tr>
-            <tr className="border-b-2">
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(3)}>{board[3]}</button></td>
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(4)}>{board[4]}</button></td>
-              <td                       ><button className="h-20 w-20" onClick={() => onSquareClick(5)}>{board[5]}</button></td>
-            </tr>
-            <tr>
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(6)}>{board[6]}</button></td>
-              <td className="border-r-2"><button className="h-20 w-20" onClick={() => onSquareClick(7)}>{board[7]}</button></td>
-              <td                       ><button className="h-20 w-20" onClick={() => onSquareClick(8)}>{board[8]}</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </p>
-      <p>
+      <button className="btn-primary m-2 w-60" onClick={() => setMode('')}>
+        &#8592; {(mode === 'HvH') ? 'Human vs Human' : (mode === 'HvA') ? 'Human vs AI' : (mode === 'AvH') ? 'AI vs Human' : (mode === 'AvA') ? 'AI vs AI' : 'INVALID MODE!'}
+      </button>
+      <table className="table-fixed">
+        <tbody>
+          <tr className="border-b-2">
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(0)}>{board[0]}</button></td>
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(1)}>{board[1]}</button></td>
+            <td                       ><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(2)}>{board[2]}</button></td>
+          </tr>
+          <tr className="border-b-2">
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(3)}>{board[3]}</button></td>
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(4)}>{board[4]}</button></td>
+            <td                       ><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(5)}>{board[5]}</button></td>
+          </tr>
+          <tr>
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(6)}>{board[6]}</button></td>
+            <td className="border-r-2"><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(7)}>{board[7]}</button></td>
+            <td                       ><button className="text-4xl h-20 w-20" onClick={() => onSquareClick(8)}>{board[8]}</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <button className="btn-primary m-2 w-20" onClick={onNewClick} disabled={((mode === 'AvA') || (mode === 'HvA' && nextPlayer === 'O') || (mode === 'AvH' && nextPlayer === 'X'))}>{(result === '') ? 'Reset' : 'New'}</button>
         {statusMessage}
-      </p>
-      <p>
-        <button className="" onClick={onNewClick}>{(result === '') ? 'Reset' : 'New'}</button>
-      </p>
-      <p>
-        <ul>
-          {history.map((hist) => <li>{hist}</li>)}
-        </ul>
-      </p>
+      </div>
+      <div>
+        <p>History:</p>
+        {history.map((hist) => <p>{hist}</p>)}
+      </div>
     </div>
   )
 
