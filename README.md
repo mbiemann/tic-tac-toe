@@ -20,3 +20,9 @@ Build
 ```shell
 npm run build
 ```
+
+Run a sandbox script
+
+```shell
+node sandbox/minimax.js
+```
