@@ -1,6 +1,7 @@
 # tictactoe
 
-Live Example = [https://mbiemann.github.io/tic-tac-toe]
+Live Demo:
+* https://mbiemann.github.io/tic-tac-toe/
 
 Prereq
 
