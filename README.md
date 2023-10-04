@@ -1,4 +1,4 @@
-# tictactoe
+# Tic Tac Toe
 
 Live Demo:
 * https://mbiemann.github.io/tic-tac-toe/
