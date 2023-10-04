@@ -3,7 +3,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "rm -rf dist && parcel build"
+    "build": "rm -rf dist && parcel build --public-url ."
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
