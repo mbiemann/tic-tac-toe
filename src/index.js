@@ -164,21 +164,24 @@ function App() {
     console.log("running useEffect...");
     if (result === "" && ((mode === "AvA") || (mode === "HvA" && nextPlayer === "O") || (mode === "AvH" && nextPlayer === "X"))) {
       console.log(`playing as AI mood ${selectedAIMood}...`);
-      avail = available(board);
+      free = available(board);
       let index = -1;
-      if (selectedAIMood === "blocker") {
-        for (const i of avail) {
-          tempBoard = board.slice();
-          tempBoard[i] = another(nextPlayer);
-          if (check(another(nextPlayer), tempBoard)) {
-            index = i;
-            break;
+      if (free.length !== 9) {
+        if (selectedAIMood === "blocker") {
+          for (const i of free) {
+            tempBoard = board.slice();
+            tempBoard[i] = another(nextPlayer);
+            if (check(another(nextPlayer), tempBoard)) {
+              index = i;
+              break;
+            }
           }
+        } else if (selectedAIMood === "minimax") {
+          index = minimax(nextPlayer, board.slice());
         }
-      } else if (selectedAIMood === "minimax" && avail.length !== 9)
-        index = minimax(nextPlayer, board.slice());
+      }
       if (index === -1)
-        index = avail[Math.floor(Math.random() * avail.length)];
+        index = free[Math.floor(Math.random() * free.length)];
       makeMove(index);
     }
   }, [mode, nextPlayer, board, result]);
