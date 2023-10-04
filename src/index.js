@@ -164,7 +164,7 @@ function App() {
     console.log("running useEffect...");
     if (result === "" && ((mode === "AvA") || (mode === "HvA" && nextPlayer === "O") || (mode === "AvH" && nextPlayer === "X"))) {
       console.log(`playing as AI mood ${selectedAIMood}...`);
-      free = available(board);
+      const free = available(board);
       let index = -1;
       if (free.length !== 9) {
         if (selectedAIMood === "blocker") {
