@@ -169,7 +169,7 @@ function App() {
       if (free.length !== 9) {
         if (selectedAIMood === "blocker") {
           for (const i of free) {
-            tempBoard = board.slice();
+            const tempBoard = board.slice();
             tempBoard[i] = another(nextPlayer);
             if (check(another(nextPlayer), tempBoard)) {
               index = i;
