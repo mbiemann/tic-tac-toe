@@ -2,6 +2,8 @@
 
 Prereq
 
+* [NVM](https://github.com/nvm-sh/nvm)
+
 ```shell
 nvm use $(cat .node-version)
 npm install
