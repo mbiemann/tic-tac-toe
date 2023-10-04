@@ -247,7 +247,7 @@ function App() {
         </select>
       </div>
       <div>
-        <p>History</p>
+        <p>Games: {history.length}</p>
         {history.map((hist, index) => <p key={index}>{hist}</p>)}
       </div>
     </div>
