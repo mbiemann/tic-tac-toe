@@ -91,7 +91,12 @@ function minimax(player, board) {
 }
 
 function App() {
-  const [mode, setMode] = useState("HvA");
+  const mode = (window.location.pathname === "/human-vs-human") ? "HvH" :
+               (window.location.pathname === "/human-vs-ai") ? "HvA" :
+               (window.location.pathname === "/ai-vs-human") ? "AvH" :
+               (window.location.pathname === "/ai-vs-ai") ? "AvA" : "";
+
+  // const [mode, setMode] = useState("HvA");
   const [history, setHistory] = useState([]);
   const [result, setResult] = useState("");
   const [board, setBoard] = useState(Array(9).fill(""));
@@ -101,22 +106,7 @@ function App() {
   const [consecutive, setConsecutive] = useState(0);
   const [startConsecutive, setStartConsecutive] = useState();
 
-  function onModeClick(value) {
-    console.log("running onModeClick...");
-    setMode(value);
-    setHistory([]);
-    setResult("");
-    setBoard(Array(9).fill(""));
-    setNextPlayer("X");
-    setStatusMessage(`Next Player: ${name(value, "X")}`);
-    setConsecutive(value === "AvA" ? 1 : 0);
-    setStartConsecutive();
-  }
-
   function onNewClick() {
-    console.log("running onNewClick...");
-    if (available(board).length === 9)
-      setHistory([]);
     setResult("");
     setBoard(Array(9).fill(""));
     setNextPlayer("X");
@@ -124,7 +114,6 @@ function App() {
   }
 
   function onStartClick() {
-    console.log("running onStartClick...");
     setHistory([]);
     setResult("");
     setBoard(Array(9).fill(""));
@@ -135,14 +124,12 @@ function App() {
   }
 
   function addToHistory(message) {
-    console.log("running addToHistory...");
     const nextHistory = history.slice();
     nextHistory.push(message);
     setHistory(nextHistory);
   }
 
   function makeMove(i) {
-    console.log("running makeMove...");
     if (result === "" && board[i] === "") {
       const nextBoard = board.slice();
       nextBoard[i] = nextPlayer;
@@ -165,15 +152,12 @@ function App() {
   }
 
   function onSquareClick(i) {
-    console.log("running onSquareClick...");
     if ((mode === "HvH") || (mode === "HvA" && nextPlayer === "X") || (mode === "AvH" && nextPlayer === "O"))
       makeMove(i);
   }
 
   useEffect(() => {
-    console.log("running useEffect...");
     if (result === "" && ((mode === "AvA") || (mode === "HvA" && nextPlayer === "O") || (mode === "AvH" && nextPlayer === "X"))) {
-      console.log(`playing as AI mood ${selectedAIMood}...`);
       const free = available(board);
       let index = -1;
       if (free.length !== 9) {
@@ -194,29 +178,29 @@ function App() {
         index = free[Math.floor(Math.random() * free.length)];
       makeMove(index);
     } else if (mode === "AvA" && result !== "" && consecutive !== 0)
-      if (history.length !== consecutive)
+      if (history.length < consecutive)
         onNewClick();
   }, [mode, nextPlayer, board, result]);
 
   const divModes = (
     <div>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => onModeClick("HvH")}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='/human-vs-human'}>
           Human vs Human
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => onModeClick("HvA")}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='/human-vs-ai'}>
           Human vs AI
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => onModeClick("AvH")}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='/ai-vs-human'}>
           AI vs Human
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => onModeClick("AvA")}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='/ai-vs-ai'}>
           AI vs AI
         </button>
       </p>
@@ -225,7 +209,7 @@ function App() {
 
   const divBoard = (
     <div>
-      <button className="btn-primary m-2 w-60" onClick={() => setMode("")}>
+      <button className="btn-primary m-2 w-60" onClick={() => location.href='/'}>
         &#8592; {(mode === "HvH") ? "Human vs Human" : (mode === "HvA") ? "Human vs AI" : (mode === "AvH") ? "AI vs Human" : (mode === "AvA") ? "AI vs AI" : "INVALID MODE!"}
       </button>
       <table className="table-fixed">
@@ -248,7 +232,7 @@ function App() {
         </tbody>
       </table>
       <div>
-        <button className="btn-primary m-2 w-20" onClick={onNewClick} disabled={((available(board).length === 9 && history.length === 0) || (result === "" && ((mode === "AvA") || (mode === "HvA" && nextPlayer === "O") || (mode === "AvH" && nextPlayer === "X"))))}>{(result !== "") ? "New" : (available(board).length === 9) ? "Clear" : "Reset"}</button>
+        <button className="btn-primary m-2 w-20" onClick={onNewClick} disabled={(available(board).length === 9 || (result === "" && ((mode === "AvA") || (mode === "HvA" && nextPlayer === "O") || (mode === "AvH" && nextPlayer === "X"))))}>{(result !== "") ? "New" : "Reset"}</button>
         {statusMessage}
       </div>
       <div hidden={(mode === "HvH")}>
