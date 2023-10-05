@@ -1,9 +1,13 @@
-# Tic Tac Toe
+# Noughts & Crosses
 
 Live Demo:
 * https://mbiemann.github.io/tic-tac-toe/
 
-Prereq
+___
+
+## Contributions
+
+Pre-requirements:
 
 * [NVM](https://github.com/nvm-sh/nvm)
 
@@ -12,19 +16,19 @@ nvm use $(cat .node-version)
 npm install
 ```
 
-Run
+Run:
 
 ```shell
 npm start
 ```
 
-Build
+Build:
 
 ```shell
 npm run build
 ```
 
-Run a sandbox script
+Run a sandbox script:
 
 ```shell
 node sandbox/minimax.js
