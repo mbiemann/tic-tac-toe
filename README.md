@@ -31,5 +31,5 @@ npm run build
 Run a sandbox script:
 
 ```shell
-node sandbox/minimax.js
+node sandbox/sandbox.js
 ```

@@ -6,16 +6,13 @@ function another(player) {
 }
 
 function check(player, board) {
-  return (
-      board[0] === player && board[1] === player && board[2] === player ||
-      board[3] === player && board[4] === player && board[5] === player ||
-      board[6] === player && board[7] === player && board[8] === player ||
-      board[0] === player && board[3] === player && board[6] === player ||
-      board[1] === player && board[4] === player && board[7] === player ||
-      board[2] === player && board[5] === player && board[8] === player ||
-      board[0] === player && board[4] === player && board[8] === player ||
-      board[2] === player && board[4] === player && board[6] === player
-  );
+  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for (let i in wins) {
+    const win = wins[i];
+    if (board[win[0]] == player && board[win[1]] == player && board[win[2]] == player)
+        return true;
+  }
+  return false;
 }
 
 function available(board) {
@@ -35,13 +32,13 @@ function flat(board) {
 
 function name(mode, player) {
   if (mode === "HvA" && player === "X")
-    return "YOU (X)"
+    return "YOU - X"
   if (mode === "HvA" && player === "O")
-    return "AI (O)"
+    return "AI - O"
   if (mode === "AvH" && player === "X")
-    return "AI (X)"
+    return "AI - X"
   if (mode === "AvH" && player === "O")
-    return "YOU (O)"
+    return "YOU - O"
   return player;
 }
 
@@ -101,6 +98,8 @@ function App() {
   const [nextPlayer, setNextPlayer] = useState("X");
   const [statusMessage, setStatusMessage] = useState(`Next Player: ${name("HvA", "X")}`);
   const [selectedAIMood, setSelectedAIMood] = useState("random");
+  const [consecutive, setConsecutive] = useState(0);
+  const [startConsecutive, setStartConsecutive] = useState();
 
   function onModeClick(value) {
     console.log("running onModeClick...");
@@ -110,18 +109,29 @@ function App() {
     setBoard(Array(9).fill(""));
     setNextPlayer("X");
     setStatusMessage(`Next Player: ${name(value, "X")}`);
+    setConsecutive(value === "AvA" ? 1 : 0);
+    setStartConsecutive();
   }
 
   function onNewClick() {
     console.log("running onNewClick...");
-    if (available(board).length === 9) {
-      setHistory([])
-    }
+    if (available(board).length === 9)
+      setHistory([]);
     setResult("");
     setBoard(Array(9).fill(""));
     setNextPlayer("X");
     setStatusMessage(`Next Player: ${name(mode, "X")}`);
+  }
 
+  function onStartClick() {
+    console.log("running onStartClick...");
+    setHistory([]);
+    setResult("");
+    setBoard(Array(9).fill(""));
+    setNextPlayer("X");
+    setStatusMessage(`Next Player: ${name(mode, "X")}`);
+    setConsecutive(250);
+    setStartConsecutive(new Date());
   }
 
   function addToHistory(message) {
@@ -183,7 +193,9 @@ function App() {
       if (index === -1)
         index = free[Math.floor(Math.random() * free.length)];
       makeMove(index);
-    }
+    } else if (mode === "AvA" && result !== "" && consecutive !== 0)
+      if (history.length !== consecutive)
+        onNewClick();
   }, [mode, nextPlayer, board, result]);
 
   const divModes = (
@@ -246,9 +258,17 @@ function App() {
           <option value="minimax">Minimax</option>
         </select>
       </div>
+      <div hidden={(mode !== "AvA")}>
+        <button className="btn-primary m-2 w-60" onClick={onStartClick}>Start consecutive games</button>
+      </div>
       <div>
-        <p>Games: {history.length}</p>
-        {history.map((hist, index) => <p key={index}>{hist}</p>)}
+        <p className="font-bold">Games: {history.length} <span hidden={(consecutive === 0)}>of {consecutive}</span></p>
+        <p hidden={history.filter(s => s.includes("draw!")).length === 0}>Draws: {history.filter(s => s.includes("draw!")).length}</p>
+        <p hidden={history.filter(s => s.includes("X wins!")).length === 0}>{name(mode, "X")} wins: {history.filter(s => s.includes("X wins!")).length}</p>
+        <p hidden={history.filter(s => s.includes("O wins!")).length === 0}>{name(mode, "O")} wins: {history.filter(s => s.includes("O wins!")).length}</p>
+        <p hidden={startConsecutive == null}>Duration {(new Date() - startConsecutive)/1000} second(s)</p>
+        <p hidden={history.length === 0} className="font-bold">Historic:</p>
+        {history.map((hist, index) => <p key={index} className="font-mono text-xs">{hist}</p>)}
       </div>
     </div>
   )
