@@ -1,7 +1,7 @@
 # Noughts & Crosses
 
 Live Demo:
-* https://mbiemann.github.io/tic-tac-toe/
+* [https://mbiemann.github.io/tic-tac-toe/](https://tic-tac-toe.mbiemann.com/)
 
 ___
 
