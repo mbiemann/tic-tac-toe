@@ -2,8 +2,10 @@
   "name": "tictactoe",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "rm -rf dist && parcel build --public-url ."
+    "start": "parcel --https",
+    "build": "rm -rf .parcel-cache dist && parcel build --no-scope-hoist --no-content-hash --no-source-maps --public-url .",
+    "refresh": "rm -rf .parcel-cache dist",
+    "clean": "rm -rf .parcel-cache dist node_modules package-lock.json"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
