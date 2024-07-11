@@ -185,22 +185,22 @@ function App() {
   const divModes = (
     <div>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => location.href='/human-vs-human'}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='#/human-vs-human'}>
           Human vs Human
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => location.href='/human-vs-ai'}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='#/human-vs-ai'}>
           Human vs AI
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => location.href='/ai-vs-human'}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='#/ai-vs-human'}>
           AI vs Human
         </button>
       </p>
       <p>
-        <button className="btn-primary m-2 w-60" onClick={() => location.href='/ai-vs-ai'}>
+        <button className="btn-primary m-2 w-60" onClick={() => location.href='#/ai-vs-ai'}>
           AI vs AI
         </button>
       </p>
